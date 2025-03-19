@@ -83,16 +83,18 @@
 
     const data = {
       displayString: "0",
+      hasDecimal: false,
       appendStringNum: (newChar) => {
-        if (newChar === ".") {
-          data.displayString += newChar;
+        if (data.displayString === "Error" || data.displayString === "NaN") {
+          data.displayString = "";
+          data.hasDecimal = false;
         }
-
+        if (newChar === "." && (!data.hasDecimal)) {
+          data.displayString += newChar;
+          data.hasDecimal = true;
+        }
         if (numberStrs.includes(newChar)) {
           if (data.displayString === "0") {
-            data.displayString = "";
-          }
-          if (data.displayString === "Error") {
             data.displayString = "";
           }
           data.displayString += newChar;
@@ -103,6 +105,7 @@
       appendStringOperator: (newChar) => {
         if (numberStrs.includes(data.displayString.slice(-1)) || data.displayString.slice(-1) === ")") {
           data.displayString += newChar;
+          data.hasDecimal = false;
         }
         data.updateDisplay();
       },
@@ -137,6 +140,7 @@
 
       clear: () => {
         data.displayString = "0";
+        data.hasDecimal = false;
         data.updateDisplay();
       },
 
