@@ -1,154 +1,300 @@
 <html>
-  <head>
-    <title>Calculator</title>
-    <style>
-      .button {
-        width: 80px;
-        height: 40px;
-        background-color: #6969b3;
-        border: 0px;
-        color: #ffffffca;
-        border-radius: 6px;
-        box-shadow: 3px 5px 5px black;
-      }
 
-      button:hover {
-        background-color: #98c1d9;
-      }
+<head>
+  <title>Calculator</title>
+  <style>
+    .button {
+      width: 80px;
+      height: 40px;
+      background-color: #6969b3;
+      border: 0px;
+      color: #ffffffca;
+      border-radius: 6px;
+      box-shadow: 3px 5px 5px black;
+    }
 
-      button:active {
-        box-shadow: 2px 4px 4px black;
-      }
+    button:hover {
+      background-color: #98c1d9;
+    }
 
-      .flexContainer {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: space-evenly;
-        align-items: baseline;
-        width: 390px;
-        row-gap: 8px;
-      }
+    button:active {
+      box-shadow: 2px 4px 4px black;
+    }
 
-      .displayContainer {
-        display: flex;
-        justify-content: flex-end;
-        width: 390px;
-      }
+    .flexContainer {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-evenly;
+      align-items: baseline;
+      width: 390px;
+      row-gap: 8px;
+    }
 
-      #display {
-        margin-right: 20px;
-      }
-    </style>
-  </head>
+    .displayContainer {
+      display: flex;
+      justify-content: flex-end;
+      width: 390px;
+    }
 
-  <body>
-    <h1>Calculator</h1>
-    <div class="displayContainer">
-      <span id="display"></span>
-    </div>
+    #display {
+      margin-right: 20px;
+    }
+  </style>
+</head>
 
-    <div class="flexContainer">
-      <button class="button number">7</button>
-      <button class="button number">8</button>
-      <button class="button number">9</button>
-      <button class="button operator">/</button>
+<body>
+  <h1>Calculator</h1>
+  <div class="displayContainer">
+    <span id="display"></span>
+  </div>
 
-      <button class="button number">4</button>
-      <button class="button number">5</button>
-      <button class="button number">6</button>
-      <button class="button operator">*</button>
+  <div class="flexContainer">
+    <button class="button number">7</button>
+    <button class="button number">8</button>
+    <button class="button number">9</button>
+    <button class="button operator">/</button>
 
-      <button class="button number">1</button>
-      <button class="button number">2</button>
-      <button class="button number">3</button>
-      <button class="button operator">-</button>
+    <button class="button number">4</button>
+    <button class="button number">5</button>
+    <button class="button number">6</button>
+    <button class="button operator">*</button>
 
-      <button class="button number">0</button>
-      <button class="button decimal">.</button>
-      <button class="button equals">=</button>
-      <button class="button operator">+</button>
+    <button class="button number">1</button>
+    <button class="button number">2</button>
+    <button class="button number">3</button>
+    <button class="button operator">-</button>
 
-      <button class="button parenthesis">(</button>
-      <button class="button parenthesis">)</button>
-    </div>
+    <button class="button number">0</button>
+    <button id="decimal" class="button decimal">.</button>
+    <button id="equals" class="button equals">=</button>
+    <button class="button operator">+</button>
 
-    <script>
-      const numbersArr = Array.from(document.getElementsByClassName("number"));
-      const operatorsArr = Array.from(document.getElementsByClassName("operator"));
-      const parenthesisArr = Array.from(document.getElementsByClassName("parenthesis"));
-      const numberStrs = "0123456789".split("");
+    <button class="button parenthesis">(</button>
+    <button class="button parenthesis">)</button>
+    <button id="clear" class="button clear">C</button>
+  </div>
 
-      const data = {
-        displayString: "0",
-        appendStringNum: (newChar) => {
-          if (newChar === ".") {
-            //decimal + 0?
-          }
+  <script>
+    const numbersArr = Array.from(document.getElementsByClassName("number"));
+    const operatorsArr = Array.from(document.getElementsByClassName("operator"));
+    const parenthesisArr = Array.from(document.getElementsByClassName("parenthesis"));
+    const numberStrs = "0123456789".split("");
 
-          if (numberStrs.includes(newChar)) {
-            if (data.displayString === "0") {
-              data.displayString = "";
-            }
-            data.displayString += newChar;
-          }
-          data.updateDisplay();
-        },
+    const data = {
+      displayString: "0",
+      appendStringNum: (newChar) => {
+        if (newChar === ".") {
+          data.displayString += newChar;
+        }
 
-        appendStringOperator: (newChar) => {
-          if (numberStrs.includes(data.displayString.slice(-1)) || data.displayString.slice(-1) === ")") {
-            data.displayString += newChar;
-          }
-          data.updateDisplay();
-        },
-
-        appendStringParenthesis: (newChar) => {
-          if (newChar === ")") {
-            if (data.displayString.split("(").length <= data.displayString.split(")").length) {
-              //if there are not enough open parenthesis to add a closing parenthesis terminate early
-              return;
-            }
-            if (operatorsArr.map((operator) => operator.innerText).includes(data.displayString[data.displayString.length - 1])) {
-              //early termination for adding parenthesis after operator
-              return;
-            }
-          }
+        if (numberStrs.includes(newChar)) {
           if (data.displayString === "0") {
             data.displayString = "";
-            data.displayString += newChar;
+          }
+          if (data.displayString === "Error") {
+            data.displayString = "";
+          }
+          data.displayString += newChar;
+        }
+        data.updateDisplay();
+      },
+
+      appendStringOperator: (newChar) => {
+        if (numberStrs.includes(data.displayString.slice(-1)) || data.displayString.slice(-1) === ")") {
+          data.displayString += newChar;
+        }
+        data.updateDisplay();
+      },
+
+      appendStringParenthesis: (newChar) => {
+        if (newChar === ")") {
+          if (data.displayString.split("(").length <= data.displayString.split(")").length) {
+            //if there are not enough open parenthesis to add a closing parenthesis terminate early
             return;
           }
-
+          if (operatorsArr.map((operator) => operator.innerText).includes(data.displayString[data.displayString.length - 1])) {
+            //early termination for adding parenthesis after operator
+            return;
+          }
+        }
+        if (data.displayString === "0") {
+          data.displayString = "";
           data.displayString += newChar;
+          return;
+        }
 
-          data.updateDisplay();
-        },
-        updateDisplay: () => {
-          const display = document.getElementById("display");
-          display.innerText = data.displayString;
-        },
-      };
+        data.displayString += newChar;
 
-      const display = document.getElementById("display");
-      display.innerText = data.displayString;
+        data.updateDisplay();
+      },
 
-      numbersArr.map((elem, i) => {
-        elem.addEventListener("click", (evt) => {
-          data.appendStringNum(elem.innerText);
-        });
+      displayResult: () => {
+        const result = calculateDisplayString();
+        data.displayString = result;
+        data.updateDisplay();
+      },
+
+      clear: () => {
+        data.displayString = "0";
+        data.updateDisplay();
+      },
+
+      updateDisplay: () => {
+        const display = document.getElementById("display");
+        display.innerText = data.displayString;
+      },
+    };
+
+    const display = document.getElementById("display");
+    display.innerText = data.displayString;
+
+    numbersArr.map((elem, i) => {
+      elem.addEventListener("click", (evt) => {
+        data.appendStringNum(elem.innerText);
       });
+    });
 
-      operatorsArr.map((elem, i) => {
-        elem.addEventListener("click", (evt) => {
-          data.appendStringOperator(elem.innerText);
-        });
+    operatorsArr.map((elem, i) => {
+      elem.addEventListener("click", (evt) => {
+        data.appendStringOperator(elem.innerText);
       });
+    });
 
-      parenthesisArr.map((elem, i) => {
-        elem.addEventListener("click", (evt) => {
-          data.appendStringParenthesis(elem.innerText);
-        });
+    parenthesisArr.map((elem, i) => {
+      elem.addEventListener("click", (evt) => {
+        data.appendStringParenthesis(elem.innerText);
       });
-    </script>
-  </body>
+    });
+
+    class ExpressionNode {
+      constructor(value, left = null, right = null) {
+        this.value = value;
+        this.left = left;
+        this.right = right;
+      }
+    }
+
+    // Tokenize the input expression into numbers, operators, and parentheses.
+    function tokenize(expression) {
+      const tokens = [];
+      let numberBuffer = "";
+      for (const char of expression) {
+        if ("0123456789.".includes(char)) {
+          numberBuffer += char;
+        } else {
+          // push any accumulated number before adding the operator/parenthesis
+          if (numberBuffer) {
+            tokens.push(numberBuffer);
+            numberBuffer = "";
+          }
+          if ("+-*/()".includes(char)) {
+            tokens.push(char);
+          }
+          // ignore any other characters (like spaces)
+        }
+      }
+      if (numberBuffer) {
+        tokens.push(numberBuffer);
+      }
+      return tokens;
+    }
+
+    // Parse expressions with addition and subtraction.
+    function parseExpression(tokens) {
+      let node = parseTerm(tokens);
+      while (tokens.length > 0 && (tokens[0] === '+' || tokens[0] === '-')) {
+        const operator = tokens.shift();
+        const rightNode = parseTerm(tokens);
+        node = new ExpressionNode(operator, node, rightNode);
+      }
+      return node;
+    }
+
+    // Parse terms with multiplication and division.
+    function parseTerm(tokens) {
+      let node = parseFactor(tokens);
+      while (tokens.length > 0 && (tokens[0] === '*' || tokens[0] === '/')) {
+        const operator = tokens.shift();
+        const rightNode = parseFactor(tokens);
+        node = new ExpressionNode(operator, node, rightNode);
+      }
+      return node;
+    }
+
+    // Parse factors which can be a number or a parenthesized expression.
+    function parseFactor(tokens) {
+      const token = tokens.shift();
+      if (token === "(") {
+        const node = parseExpression(tokens);
+        // Ensure that the closing parenthesis exists.
+        if (tokens.shift() !== ")") {
+          throw new Error("Mismatched parenthesis");
+        }
+        return node;
+      } else {
+        // Return a leaf node for the number.
+        return new ExpressionNode(token);
+      }
+    }
+
+    // Recursively evaluate the expression tree.
+    function evaluateTree(node) {
+      // If leaf node, parse it as a number.
+      if (!node.left && !node.right) {
+        return parseFloat(node.value);
+      }
+      const leftVal = evaluateTree(node.left);
+      const rightVal = evaluateTree(node.right);
+      switch (node.value) {
+        case '+':
+          return leftVal + rightVal;
+        case '-':
+          return leftVal - rightVal;
+        case '*':
+          return leftVal * rightVal;
+        case '/':
+          if (rightVal === 0) {
+            throw new Error("Division by zero");
+          }
+          return leftVal / rightVal;
+        default:
+          throw new Error(`Unknown operator: ${node.value}`);
+      }
+    }
+
+    function calculateDisplayString() {
+      try {
+        const tokens = tokenize(data.displayString);
+        // Debug statement
+        // console.log(tokens);
+        const expressionTree = parseExpression(tokens);
+        if (tokens.length > 0) {
+          throw new Error("Unexpected tokens remaining");
+        }
+        const result = evaluateTree(expressionTree);
+        return result.toString();
+      } catch (error) {
+        console.error("Error evaluating expression:", error);
+        return "Error";
+      }
+    }
+
+    equalsButton = document.getElementById("equals");
+    equalsButton.addEventListener("click", (evt) => {
+      data.displayResult();
+    });
+
+    clearButton = document.getElementById("clear");
+    clearButton.addEventListener("click", (evt) => {
+      data.clear();
+    });
+
+    decimalButton = document.getElementById("decimal");
+    decimalButton.addEventListener("click", (evt) => {
+      data.appendStringNum(decimalButton.innerText);
+    });
+  </script>
+</body>
+
 </html>
